@@ -13,7 +13,7 @@ The dataset you'll use is an ecommerce dataset that has millions of Google Analy
 
 •	Schedule transformation jobs outputs to BigQuery
 
-![Image of Pipe](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/pipeline1.png)
+![Image of Pipe](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/pipeline1.png)
 
 We need BigQuery as an endpoint for dataset ingestion to the pipeline and as a destination for the output when the pipeline is completed.
 
@@ -65,7 +65,7 @@ Create dataset
 
 Import & Add to Flow
 
-![Image of ecomm](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/ecomm.jpg)
+![Image of ecomm](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/ecomm.jpg)
 
 
 ## Exploring ecommerce data fields with a UI
@@ -76,14 +76,14 @@ Click Edit Recipe.
 
 Cloud Dataprep loads a sample of your dataset into the Transformer view. This process might take a few seconds.
 
-![Image of Transformer](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Transformer.jpg)
+![Image of Transformer](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/Transformer.jpg)
 
 
 Grey bar under totalTransactionRevenue represent missing values for the totalTransactionRevenue field. This means that a lot of sessions in this sample did not generate revenue. Later, we will filter out these values so our final table only has customer transactions and associated revenue.
 
 Maximum timeOnSite in seconds, Maximum pageviews, and Maximum sessionQualityDim for the data sample
 
-![Image of Timeonsite](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/timeonsite.jpg)
+![Image of Timeonsite](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/timeonsite.jpg)
 
 
 •	Maximum Time On Site: 5,561 seconds (or 92 minutes)
@@ -95,7 +95,7 @@ Maximum timeOnSite in seconds, Maximum pageviews, and Maximum sessionQualityDim 
 
 A red bar indicates mismatched values. While sampling data, Cloud Dataprep attempts to automatically identify the type of each column. If you do not see a red bar for the productSKU column, then this means that Cloud Dataprep correctly identified the type for the column (i.e. the String type). If you do see a red bar, then this means that Cloud Dataprep found enough number values in its sampling to determine (incorrectly) that the type should be Integer. Cloud Dataprep also detected some non-integer values and therefore flagged those values as mismatched. In fact, the productSKU is not always an integer (for example, a correct value might be "GGOEGOCD078399"). So in this case, Cloud Dataprep incorrectly identified the column type: it should be a string, not an integer.
 
- ![Image of red](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/red.jpg)
+ ![Image of red](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/red.jpg)
  
  
  ## Cleaning the data
@@ -132,7 +132,7 @@ Your team has asked you to create a table of all user sessions that bought at le
 2.	In the Suggestions panel, in Delete rows , click Add.
 
 
-![Image of filter](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/filter.jpg)
+![Image of filter](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/filter.jpg)
 
 
 This step filters your dataset to only include transactions with revenue (where totalTransactionRevenue is not NULL).
@@ -147,7 +147,7 @@ The dataset contains sessions of different types, for example PAGE (for page vie
 2.	In the Suggestions panel, in Keep rows, and click Add.
 
 
-![Image of filter2](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/filter2.jpg)
+![Image of filter2](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/filter2.jpg)
 
 
 ## Enriching the data
@@ -230,7 +230,7 @@ As mentioned in the schema, the totalTransactionRevenue column contains values p
 5.	Review the full list of steps in your recipe:
 
 
-![Image of recipe](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/recipe.jpg)
+![Image of recipe](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/recipe.jpg)
 
 
 
@@ -252,7 +252,7 @@ As mentioned in the schema, the totalTransactionRevenue column contains values p
 7.	For options, Truncate the table every run
 
 
-![Image of publish](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/publish.jpg)
+![Image of publish](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/publish.jpg)
 
 
 8.	Click Update
@@ -261,7 +261,7 @@ As mentioned in the schema, the totalTransactionRevenue column contains values p
 
 Once your Cloud Dataprep job is completed (takes 10 - 15 minutes), refresh your BigQuery page and confirm that the output table revenue_reporting exists.
 
-![Image of pipeline2](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/pipeline2.jpg)
+![Image of pipeline2](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/pipeline2.jpg)
 
 
 
@@ -271,7 +271,7 @@ You will know your revenue reporting table is ready when the below query success
 
 Refer reporting query
 
-![Image of results](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/results.jpg)
+![Image of results](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/results.jpg)
 
 
 ## Creating a scheduled pipeline job
@@ -301,7 +301,7 @@ IMPORTANT: You will not be able to view your scheduled flows until you setup a s
 8.	In your flow, click the output node as shown below:
 
 
-![Image of job](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/job.jpg)
+![Image of job](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/job.jpg)
 
 
 9.	Under Scheduled Destinations, click Add
@@ -318,7 +318,7 @@ IMPORTANT: You will not be able to view your scheduled flows until you setup a s
 2.	You see the list of jobs, and wait until your job is marked as Completed.
 
 
-![Image of joblist](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/joblist.jpg)
+![Image of joblist](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/Resources/joblist.jpg)
 
 
 
