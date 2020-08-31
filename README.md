@@ -102,17 +102,28 @@ A red bar indicates mismatched values. While sampling data, Cloud Dataprep attem
  
  Clean the data by deleting unused columns, eliminating duplicates, creating calculated fields, and filtering out unwanted rows.
  
+ ### Converting the productSKU column data type
+ 
  To ensure that the productSKU column type is a string data type, open the menu to the right of the productSKU column, then click Change type > String.
+ 
+ 
+ ### Deleting unused columns
  
  We will be deleting the itemQuantity and itemRevenue columns as they only contain NULL values are not useful
  
- Team has informed you there may be duplicate session values included in the source dataset. Let's remove these with a new deduplicate step.
+ 
+ ### Deduplicating rows
+ 
+Team has informed you there may be duplicate session values included in the source dataset. Let's remove these with a new deduplicate step.
  
 1.	Click the Filter rows icon in the toolbar, then click Remove duplicate rows.
 
 Click Add
 
 Review the recipe 
+
+
+### Filtering out sessions without revenue
 
 Your team has asked you to create a table of all user sessions that bought at least one item from the website. Filter out user sessions with NULL revenue.
 
@@ -122,6 +133,136 @@ Your team has asked you to create a table of all user sessions that bought at le
 
 
 ![Image of filter](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/filter.jpg)
+
+
+This step filters your dataset to only include transactions with revenue (where totalTransactionRevenue is not NULL).
+
+
+### Filtering sessions for PAGE views
+
+The dataset contains sessions of different types, for example PAGE (for page views) or EVENT (for triggered events like "viewed product categories" or "added to cart"). To avoid double counting session pageviews, add a filter to only include page view related hits.
+
+1.	In the histogram below the type column, click the bar for PAGE. All rows with the type PAGE are now highlighted in green.
+
+2.	In the Suggestions panel, in Keep rows, and click Add.
+
+
+![Image of filter2](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/filter2.jpg)
+
+
+## Enriching the data
+
+
+•	visitId: an identifier for this session. This is part of the value usually stored as the utmb cookie. This is only unique to the user. For a completely unique ID, you should use a combination of fullVisitorId and visitId.*
+
+As we see, visitId is not unique across all users. We will need to create a unique identifier.
+
+
+### Creating a new column for a unique session ID
+
+As you discovered, the dataset has no single column for a unique visitor session. Create a unique ID for each session by concatenating the fullVisitorID and visitId fields.
+
+1.	Click on the Merge columns icon in the toolbar.
+
+2.	For Columns, select fullVisitorId and visitId.
+
+3.	For Separator type a single hyphen character: -
+
+4.	For the New column name, type unique_session_id.
+
+5.	Click Add.
+
+The unique_session_id is now a combination of the fullVisitorId and visitId. We will explore in a later lab whether each row in this dataset is at the unique session level (one row per user session) or something even more granular.
+
+
+### Creating a case statement for the ecommerce action type
+
+As you saw earlier, values in the eCommerceAction_type column are integers that map to actual ecommerce actions performed in that session. For example, 3 = "Add to Cart" or 5 = "Check out." This mapping will not be immediately apparent to our end users so let's create a calculated field that brings in the value name.
+
+1.	Click on the Conditions icon in the toolbar, then click Case on single column.
+
+2.	For Column to evaluate, specify eCommerceAction_type.
+
+3.	Next to Cases (1), click Add 8 times for a total of 9 cases.
+
+Value to compare	New value:
+
+0	'Unknown'
+
+1	'Click through of product lists'
+
+2	'Product detail views'
+
+3	'Add product(s) to cart'
+
+4	'Remove product(s) from cart'
+
+5	'Check out'
+
+6	'Completed purchase'
+
+7	'Refund of purchase'
+
+8	'Checkout options'
+
+
+
+5.	For New column name, type eCommerceAction_label. Leave the other fields at their default values.
+
+6.	Click Add.
+
+
+### Adjusting values in the totalTransactionRevenue column
+
+
+As mentioned in the schema, the totalTransactionRevenue column contains values passed to Analytics multiplied by 10^6 (e.g., 2.40 would be given as 2400000). You now divide contents of that column by 10^6 to get the original values.
+
+1.	Open the menu to the right of the totalTransactionRevenue column, then select Calculate > Custom formula.
+
+2.	For Formula, type: DIVIDE(totalTransactionRevenue,1000000) and for New column name, type: totalTransactionRevenue1. Notice the preview for the transformation:
+
+3.	Click Add.
+
+4.	To convert the new totalTransactionRevenue1 column's type to a decimal data type, open the menu to the right of the totalTransactionRevenue1 column by clicking  , then click Change type > Decimal.
+
+5.	Review the full list of steps in your recipe:
+
+
+![Image of recipe](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/recipe.jpg)
+
+
+
+## Running and scheduling Cloud Dataprep jobs to BigQuery
+
+
+1.	Click Run Job
+
+2.	Hover over the Publishing Actions created and click Edit.
+
+3.	Select BigQuery as a data sink in the left bar
+
+4.	Select your existing ecommerce dataset
+
+5.	Select Create new Table
+
+6.	For Table Name, type revenue_reporting
+
+7.	For options, Truncate the table every run
+
+
+![Image of publish](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/publish.jpg)
+
+
+8.	Click Update
+
+9.	Review the setting then Run Job
+
+Once your Cloud Dataprep job is completed (takes 10 - 15 minutes), refresh your BigQuery page and confirm that the output table revenue_reporting exists.
+
+![Image of pipeline2](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/pipeline2.jpg)
+
+
+
 
 
 
