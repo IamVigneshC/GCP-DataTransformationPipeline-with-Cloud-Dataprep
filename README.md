@@ -185,6 +185,7 @@ As you saw earlier, values in the eCommerceAction_type column are integers that 
 
 3.	Next to Cases (1), click Add 8 times for a total of 9 cases.
 
+
 Value to compare	New value:
 
 0	'Unknown'
@@ -207,9 +208,10 @@ Value to compare	New value:
 
 
 
-5.	For New column name, type eCommerceAction_label. Leave the other fields at their default values.
 
-6.	Click Add.
+4.	For New column name, type eCommerceAction_label. Leave the other fields at their default values.
+
+5.	Click Add.
 
 
 ### Adjusting values in the totalTransactionRevenue column
@@ -260,6 +262,65 @@ As mentioned in the schema, the totalTransactionRevenue column contains values p
 Once your Cloud Dataprep job is completed (takes 10 - 15 minutes), refresh your BigQuery page and confirm that the output table revenue_reporting exists.
 
 ![Image of pipeline2](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/pipeline2.jpg)
+
+
+
+You will know your revenue reporting table is ready when the below query successfully executes:
+
+-- generate a report showing the most recent transactions
+
+Refer reporting query
+
+![Image of results](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/results.jpg)
+
+
+## Creating a scheduled pipeline job
+
+Even if your pipeline is still running, you can also schedule the execution of pipeline in the next step so the job can be re-run automatically on a regular basis to account for newer data.
+
+Note: You can navigate and perform other operations while jobs are running.
+
+1.	You will now schedule a recurrent job execution. Click the Flows icon on the left of the screen.
+
+2.	On the right of your Ecommerce Analytics Pipeline flow click the More icon (...), then click Schedule Flow.
+
+3.	In the Add Schedule dialog:
+
+4.	For Frequency, select Weekly.
+
+5.	For day of week, select Saturday and unselect Sunday.
+
+6.	For time, enter 3:00 and select AM.
+
+7.	Click Save.
+
+The job is now scheduled to run every Saturday at 3AM
+
+IMPORTANT: You will not be able to view your scheduled flows until you setup a scheduled output destination
+
+8.	In your flow, click the output node as shown below:
+
+
+![Image of job](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/job.jpg)
+
+
+9.	Under Scheduled Destinations, click Add
+
+10.	In the Scheduled Publishing settings page click Add Publishing Action
+
+11.	Specify an output destination in BigQuery like the one you created previously.
+
+
+## Monitoring jobs
+
+1.	Click the Jobs icon on the left of the screen.
+
+2.	You see the list of jobs, and wait until your job is marked as Completed.
+
+
+![Image of joblist](https://github.com/IamVigneshC/DataTransformationPipeline-with-Cloud-Dataprep/blob/master/joblist.jpg)
+
+
 
 
 
